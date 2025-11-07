@@ -9,6 +9,9 @@ import Products from "./pages/Products";
 import Warehouses from "./pages/Warehouses";
 import StockOperations from "./pages/StockOperations";
 import Reports from "./pages/Reports";
+import InventoryCount from "./pages/InventoryCount";
+import UserManagement from "./pages/UserManagement";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +29,9 @@ const App = () => (
             <Route path="/warehouses" element={<Warehouses />} />
             <Route path="/stock-operations" element={<StockOperations />} />
             <Route path="/reports" element={<Reports />} />
+            <Route path="/inventory-count" element={<InventoryCount />} />
+            <Route path="/user-management" element={<UserManagement />} />
+            <Route path="/settings" element={<Settings />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
