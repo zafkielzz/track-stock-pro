@@ -1,13 +1,13 @@
-import { 
-  LayoutDashboard, 
-  Package, 
-  Warehouse, 
-  ArrowDownUp, 
-  BarChart3, 
+import {
+  LayoutDashboard,
+  Package,
+  Warehouse,
+  ArrowDownUp,
+  BarChart3,
   ClipboardCheck,
   Users,
   Settings,
-  LogOut
+  LogOut,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ import { Separator } from "@/components/ui/separator";
 
 const Sidebar = () => {
   const navItems = [
-    { to: "/", icon: LayoutDashboard, label: "Dashboard" },
+    { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { to: "/products", icon: Package, label: "Products" },
     { to: "/warehouses", icon: Warehouse, label: "Warehouses" },
     { to: "/stock-operations", icon: ArrowDownUp, label: "Stock Operations" },
@@ -36,8 +36,12 @@ const Sidebar = () => {
             <Package className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-sidebar-foreground">InvenTrack</h1>
-            <p className="text-xs text-sidebar-foreground/60">Inventory Manager</p>
+            <h1 className="text-xl font-bold text-sidebar-foreground">
+              InvenTrack
+            </h1>
+            <p className="text-xs text-sidebar-foreground/60">
+              Inventory Manager
+            </p>
           </div>
         </div>
       </div>
@@ -84,11 +88,18 @@ const Sidebar = () => {
             <span className="text-xs font-semibold text-white">AD</span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-sidebar-foreground truncate">Admin User</p>
-            <p className="text-xs text-sidebar-foreground/60 truncate">admin@inventrackapp.com</p>
+            <p className="text-sm font-medium text-sidebar-foreground truncate">
+              Admin User
+            </p>
+            <p className="text-xs text-sidebar-foreground/60 truncate">
+              admin@inventrackapp.com
+            </p>
           </div>
         </div>
-        <Button variant="ghost" className="w-full justify-start text-sidebar-foreground/80 hover:text-sidebar-foreground hover:bg-sidebar-accent">
+        <Button
+          variant="ghost"
+          className="w-full justify-start text-sidebar-foreground/80 hover:text-sidebar-foreground hover:bg-sidebar-accent"
+        >
           <LogOut className="h-4 w-4 mr-2" />
           Logout
         </Button>

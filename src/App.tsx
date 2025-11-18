@@ -13,31 +13,37 @@ import InventoryCount from "./pages/InventoryCount";
 import UserManagement from "./pages/UserManagement";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
-
+import Index from "./pages/Index";
+import Auth from "./pages/Auth";
+import { ThemeProvider } from "./providers/ThemeProvider";
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/warehouses" element={<Warehouses />} />
-            <Route path="/stock-operations" element={<StockOperations />} />
-            <Route path="/reports" element={<Reports />} />
-            <Route path="/inventory-count" element={<InventoryCount />} />
-            <Route path="/user-management" element={<UserManagement />} />
-            <Route path="/settings" element={<Settings />} />
-          </Route>
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/warehouses" element={<Warehouses />} />
+              <Route path="/stock-operations" element={<StockOperations />} />
+              <Route path="/reports" element={<Reports />} />
+              <Route path="/inventory-count" element={<InventoryCount />} />
+              <Route path="/user-management" element={<UserManagement />} />
+              <Route path="/settings" element={<Settings />} />
+            </Route>
+            <Route path="/" element={<Index />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </ThemeProvider>{" "}
+    {/* Kết thúc bọc */}
   </QueryClientProvider>
 );
 
