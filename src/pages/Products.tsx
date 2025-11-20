@@ -18,30 +18,74 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
+import { useNavigate } from "react-router-dom";
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const products = [
-    { id: "P001", name: "Product Alpha", category: "Electronics", stock: 450, minStock: 100, status: "In Stock" },
-    { id: "P002", name: "Product Beta", category: "Furniture", stock: 23, minStock: 50, status: "Low Stock" },
-    { id: "P003", name: "Product Gamma", category: "Tools", stock: 0, minStock: 75, status: "Out of Stock" },
-    { id: "P004", name: "Product Delta", category: "Electronics", stock: 850, minStock: 200, status: "In Stock" },
-    { id: "P005", name: "Product Epsilon", category: "Supplies", stock: 320, minStock: 150, status: "In Stock" },
+    {
+      id: "P001",
+      name: "Product Alpha",
+      category: "Electronics",
+      stock: 450,
+      minStock: 100,
+      status: "In Stock",
+    },
+    {
+      id: "P002",
+      name: "Product Beta",
+      category: "Furniture",
+      stock: 23,
+      minStock: 50,
+      status: "Low Stock",
+    },
+    {
+      id: "P003",
+      name: "Product Gamma",
+      category: "Tools",
+      stock: 0,
+      minStock: 75,
+      status: "Out of Stock",
+    },
+    {
+      id: "P004",
+      name: "Product Delta",
+      category: "Electronics",
+      stock: 850,
+      minStock: 200,
+      status: "In Stock",
+    },
+    {
+      id: "P005",
+      name: "Product Epsilon",
+      category: "Supplies",
+      stock: 320,
+      minStock: 150,
+      status: "In Stock",
+    },
   ];
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "In Stock":
-        return <Badge variant="default" className="bg-success">In Stock</Badge>;
+        return (
+          <Badge variant="default" className="bg-success">
+            In Stock
+          </Badge>
+        );
       case "Low Stock":
-        return <Badge variant="default" className="bg-warning">Low Stock</Badge>;
+        return (
+          <Badge variant="default" className="bg-warning">
+            Low Stock
+          </Badge>
+        );
       case "Out of Stock":
         return <Badge variant="destructive">Out of Stock</Badge>;
       default:
         return <Badge>{status}</Badge>;
     }
   };
+  const navigate = useNavigate();
 
   return (
     <div className="p-8 space-y-6">
@@ -50,7 +94,7 @@ const Products = () => {
           <h1 className="text-3xl font-bold mb-2">Products</h1>
           <p className="text-muted-foreground">Manage your product catalog</p>
         </div>
-        <Button className="gap-2">
+        <Button className="gap-2" onClick={() => navigate("/products/new")}>
           <Plus className="h-4 w-4" />
           Add Product
         </Button>
@@ -107,7 +151,9 @@ const Products = () => {
                         <DropdownMenuItem>View Details</DropdownMenuItem>
                         <DropdownMenuItem>Edit</DropdownMenuItem>
                         <DropdownMenuItem>Print Barcode</DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+                        <DropdownMenuItem className="text-destructive">
+                          Delete
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>

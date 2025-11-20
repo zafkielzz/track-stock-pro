@@ -18,6 +18,7 @@ import Auth from "./pages/Auth";
 import { ThemeProvider } from "./providers/ThemeProvider";
 import InventoryCountNew from "./pages/IventoryCountNew";
 import InventoryCountDetail from "./pages/InventoryCountDetail";
+import ProductsNew from "./pages/ProductsNew";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -31,6 +32,7 @@ const App = () => (
             <Route element={<Layout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/products" element={<Products />} />
+              <Route path="/products/new" element={<ProductsNew />} />
               <Route path="/warehouses" element={<Warehouses />} />
               <Route path="/stock-operations" element={<StockOperations />} />
               <Route path="/reports" element={<Reports />} />
