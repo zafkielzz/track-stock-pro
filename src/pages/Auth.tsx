@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -43,121 +42,121 @@ const Auth = () => {
   });
   const [loginData, setLoginData] = useState({ email: "", password: "" });
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (session) {
-        navigate("/dashboard");
-      }
-    };
-    checkAuth();
-  }, [navigate]);
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     const {
+  //       data: { session },
+  //     } = await supabase.auth.getSession();
+  //     if (session) {
+  //       navigate("/dashboard");
+  //     }
+  //   };
+  //   checkAuth();
+  // }, [navigate]);
 
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // const handleSignup = async (e: React.FormEvent) => {
+  //   e.preventDefault();
 
-    try {
-      const validatedData = signupSchema.parse(signupData);
-      setIsLoading(true);
+  //   try {
+  //     const validatedData = signupSchema.parse(signupData);
+  //     setIsLoading(true);
 
-      const { error } = await supabase.auth.signUp({
-        email: validatedData.email,
-        password: validatedData.password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`,
-          data: {
-            full_name: validatedData.fullName,
-          },
-        },
-      });
+  //     const { error } = await supabase.auth.signUp({
+  //       email: validatedData.email,
+  //       password: validatedData.password,
+  //       options: {
+  //         emailRedirectTo: `${window.location.origin}/dashboard`,
+  //         data: {
+  //           full_name: validatedData.fullName,
+  //         },
+  //       },
+  //     });
 
-      if (error) {
-        if (error.message.includes("already registered")) {
-          toast({
-            title: "Account exists",
-            description:
-              "This email is already registered. Please login instead.",
-            variant: "destructive",
-          });
-        } else {
-          throw error;
-        }
-        return;
-      }
+  //     if (error) {
+  //       if (error.message.includes("already registered")) {
+  //         toast({
+  //           title: "Account exists",
+  //           description:
+  //             "This email is already registered. Please login instead.",
+  //           variant: "destructive",
+  //         });
+  //       } else {
+  //         throw error;
+  //       }
+  //       return;
+  //     }
 
-      toast({
-        title: "Account created!",
-        description: "You can now login to your account.",
-      });
+  //     toast({
+  //       title: "Account created!",
+  //       description: "You can now login to your account.",
+  //     });
 
-      setSignupData({ email: "", password: "", fullName: "" });
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        toast({
-          title: "Validation error",
-          description: error.errors[0].message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Error",
-          description:
-            error instanceof Error ? error.message : "Failed to create account",
-          variant: "destructive",
-        });
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //     setSignupData({ email: "", password: "", fullName: "" });
+  //   } catch (error) {
+  //     if (error instanceof z.ZodError) {
+  //       toast({
+  //         title: "Validation error",
+  //         description: error.errors[0].message,
+  //         variant: "destructive",
+  //       });
+  //     } else {
+  //       toast({
+  //         title: "Error",
+  //         description:
+  //           error instanceof Error ? error.message : "Failed to create account",
+  //         variant: "destructive",
+  //       });
+  //     }
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // const handleLogin = async (e: React.FormEvent) => {
+  //   e.preventDefault();
 
-    try {
-      const validatedData = loginSchema.parse(loginData);
-      setIsLoading(true);
+  //   try {
+  //     const validatedData = loginSchema.parse(loginData);
+  //     setIsLoading(true);
 
-      const { error } = await supabase.auth.signInWithPassword({
-        email: validatedData.email,
-        password: validatedData.password,
-      });
+  //     const { error } = await supabase.auth.signInWithPassword({
+  //       email: validatedData.email,
+  //       password: validatedData.password,
+  //     });
 
-      if (error) {
-        if (error.message.includes("Invalid")) {
-          toast({
-            title: "Login failed",
-            description: "Invalid email or password. Please try again.",
-            variant: "destructive",
-          });
-        } else {
-          throw error;
-        }
-        return;
-      }
+  //     if (error) {
+  //       if (error.message.includes("Invalid")) {
+  //         toast({
+  //           title: "Login failed",
+  //           description: "Invalid email or password. Please try again.",
+  //           variant: "destructive",
+  //         });
+  //       } else {
+  //         throw error;
+  //       }
+  //       return;
+  //     }
 
-      navigate("/dashboard");
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        toast({
-          title: "Validation error",
-          description: error.errors[0].message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Error",
-          description:
-            error instanceof Error ? error.message : "Failed to login",
-          variant: "destructive",
-        });
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //     navigate("/dashboard");
+  //   } catch (error) {
+  //     if (error instanceof z.ZodError) {
+  //       toast({
+  //         title: "Validation error",
+  //         description: error.errors[0].message,
+  //         variant: "destructive",
+  //       });
+  //     } else {
+  //       toast({
+  //         title: "Error",
+  //         description:
+  //           error instanceof Error ? error.message : "Failed to login",
+  //         variant: "destructive",
+  //       });
+  //     }
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -189,7 +188,8 @@ const Auth = () => {
               </TabsList>
 
               <TabsContent value="login">
-                <form onSubmit={handleLogin} className="space-y-4">
+                <form className="space-y-4">
+                  {/* onSubmit={handleLogin} */}
                   <div className="space-y-2">
                     <Label htmlFor="login-email">Email</Label>
                     <Input
@@ -223,7 +223,7 @@ const Auth = () => {
               </TabsContent>
 
               <TabsContent value="signup">
-                <form onSubmit={handleSignup} className="space-y-4">
+                <form className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="signup-name">Full Name</Label>
                     <Input

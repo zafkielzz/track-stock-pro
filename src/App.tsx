@@ -16,11 +16,13 @@ import NotFound from "./pages/NotFound";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import { ThemeProvider } from "./providers/ThemeProvider";
+import InventoryCountNew from "./pages/IventoryCountNew";
+import InventoryCountDetail from "./pages/InventoryCountDetail";
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <ThemeProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
@@ -33,6 +35,14 @@ const App = () => (
               <Route path="/stock-operations" element={<StockOperations />} />
               <Route path="/reports" element={<Reports />} />
               <Route path="/inventory-count" element={<InventoryCount />} />
+              <Route
+                path="/inventory-count/new"
+                element={<InventoryCountNew />}
+              />
+              <Route
+                path="/inventory-count/:id"
+                element={<InventoryCountDetail />}
+              />
               <Route path="/user-management" element={<UserManagement />} />
               <Route path="/settings" element={<Settings />} />
             </Route>
@@ -43,7 +53,6 @@ const App = () => (
         </BrowserRouter>
       </TooltipProvider>
     </ThemeProvider>{" "}
-    {/* Kết thúc bọc */}
   </QueryClientProvider>
 );
 

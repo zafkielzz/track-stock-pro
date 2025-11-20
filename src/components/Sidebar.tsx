@@ -19,7 +19,7 @@ const Sidebar = () => {
     { to: "/products", icon: Package, label: "Products" },
     { to: "/warehouses", icon: Warehouse, label: "Warehouses" },
     { to: "/stock-operations", icon: ArrowDownUp, label: "Stock Operations" },
-    { to: "/inventory", icon: ClipboardCheck, label: "Inventory Count" },
+    { to: "/inventory-count", icon: ClipboardCheck, label: "Inventory Count" },
     { to: "/reports", icon: BarChart3, label: "Reports" },
   ];
 

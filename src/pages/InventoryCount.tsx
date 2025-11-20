@@ -1,206 +1,220 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
+import Sidebar from "@/components/Sidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ClipboardList, Plus, Check, X, AlertTriangle } from "lucide-react";
+import { Plus, Search, Filter, MoreVertical, Eye } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useNavigate } from "react-router-dom";
+
+type CountStatus = "draft" | "in_progress" | "review" | "completed";
+
+interface InventoryCount {
+  id: string;
+  count_number: string;
+  warehouse: string;
+  created_by: string;
+  created_at: string;
+  status: CountStatus;
+  products_count: number;
+  differences: number;
+}
 
 const InventoryCount = () => {
-  const activeSessions = [
-    { id: "IC-001", warehouse: "Main Warehouse", zone: "Zone A", status: "in-progress", items: 45, discrepancies: 3 },
-    { id: "IC-002", warehouse: "Main Warehouse", zone: "Zone B", status: "pending-approval", items: 62, discrepancies: 8 },
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const counts: InventoryCount[] = [
+    {
+      id: "1",
+      count_number: "IC-2024-001",
+      warehouse: "Main Warehouse",
+      created_by: "Admin User",
+      created_at: "2024-01-15",
+      status: "completed",
+      products_count: 45,
+      differences: 3,
+    },
+    {
+      id: "2",
+      count_number: "IC-2024-002",
+      warehouse: "North Distribution Center",
+      created_by: "John Doe",
+      created_at: "2024-01-16",
+      status: "in_progress",
+      products_count: 32,
+      differences: 0,
+    },
+    {
+      id: "3",
+      count_number: "IC-2024-003",
+      warehouse: "South Storage Facility",
+      created_by: "Jane Smith",
+      created_at: "2024-01-17",
+      status: "review",
+      products_count: 28,
+      differences: 5,
+    },
+    {
+      id: "4",
+      count_number: "IC-2024-004",
+      warehouse: "Main Warehouse",
+      created_by: "Admin User",
+      created_at: "2024-01-18",
+      status: "draft",
+      products_count: 15,
+      differences: 0,
+    },
   ];
 
-  const countItems = [
-    { id: 1, product: "Product A", sku: "SKU-001", location: "A1-R1-B1", systemQty: 100, physicalQty: 98, variance: -2 },
-    { id: 2, product: "Product B", sku: "SKU-002", location: "A1-R1-B2", systemQty: 50, physicalQty: 50, variance: 0 },
-    { id: 3, product: "Product C", sku: "SKU-003", location: "A1-R2-B1", systemQty: 75, physicalQty: 80, variance: 5 },
-  ];
+  const getStatusBadge = (status: CountStatus) => {
+    const variants = {
+      draft: { label: "Draft", className: "bg-muted text-muted-foreground" },
+      in_progress: {
+        label: "In Progress",
+        className: "bg-primary/20 text-primary",
+      },
+      review: { label: "Review", className: "bg-warning/20 text-warning" },
+      completed: {
+        label: "Completed",
+        className: "bg-success/20 text-success",
+      },
+    };
+
+    const variant = variants[status];
+    return (
+      <Badge className={variant.className} variant="secondary">
+        {variant.label}
+      </Badge>
+    );
+  };
 
   return (
     <div className="p-8">
-      <div className="mb-8 flex items-center justify-between">
+      <div className="flex justify-between items-start mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Inventory Count</h1>
-          <p className="text-muted-foreground">Physical stock verification and discrepancy management</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            Inventory Count
+          </h1>
+          <p className="text-muted-foreground">
+            Manage inventory counting sessions
+          </p>
         </div>
-        <Button className="gap-2">
-          <Plus className="h-4 w-4" />
-          New Count Session
+        <Button
+          onClick={() => navigate("/inventory-count/new")}
+          className="gap-2"
+        >
+          <Plus className="w-4 h-4" />
+          New Count
         </Button>
       </div>
 
-      <Tabs defaultValue="active" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="active">Active Sessions</TabsTrigger>
-          <TabsTrigger value="history">History</TabsTrigger>
-          <TabsTrigger value="new">New Count</TabsTrigger>
-        </TabsList>
+      {/* Search and Filter */}
+      <div className="flex gap-4 mb-6">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            placeholder="Search counts..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+        <Button variant="outline" className="gap-2">
+          <Filter className="w-4 h-4" />
+          Filter
+        </Button>
+      </div>
 
-        <TabsContent value="active">
-          <Card>
-            <CardHeader>
-              <CardTitle>Active Count Sessions</CardTitle>
-              <CardDescription>Ongoing physical inventory verification</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Session ID</TableHead>
-                    <TableHead>Warehouse</TableHead>
-                    <TableHead>Zone</TableHead>
-                    <TableHead>Items</TableHead>
-                    <TableHead>Discrepancies</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {activeSessions.map((session) => (
-                    <TableRow key={session.id}>
-                      <TableCell className="font-medium">{session.id}</TableCell>
-                      <TableCell>{session.warehouse}</TableCell>
-                      <TableCell>{session.zone}</TableCell>
-                      <TableCell>{session.items}</TableCell>
-                      <TableCell>
-                        {session.discrepancies > 0 ? (
-                          <Badge variant="destructive" className="gap-1">
-                            <AlertTriangle className="h-3 w-3" />
-                            {session.discrepancies}
-                          </Badge>
-                        ) : (
-                          <Badge variant="outline">0</Badge>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={session.status === "in-progress" ? "default" : "secondary"}>
-                          {session.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
-                          <Button variant="outline" size="sm">View</Button>
-                          {session.status === "pending-approval" && (
-                            <>
-                              <Button variant="default" size="sm" className="gap-1">
-                                <Check className="h-3 w-3" />
-                                Approve
-                              </Button>
-                              <Button variant="destructive" size="sm" className="gap-1">
-                                <X className="h-3 w-3" />
-                                Reject
-                              </Button>
-                            </>
-                          )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="history">
-          <Card>
-            <CardHeader>
-              <CardTitle>Count History</CardTitle>
-              <CardDescription>Completed inventory count sessions</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground text-center py-8">No completed sessions yet</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="new" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Create Count Session</CardTitle>
-              <CardDescription>Start a new physical inventory count</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Warehouse</label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select warehouse" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="wh1">Main Warehouse</SelectItem>
-                      <SelectItem value="wh2">Secondary Warehouse</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Zone</label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select zone" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="za">Zone A</SelectItem>
-                      <SelectItem value="zb">Zone B</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <Button>Start Count Session</Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Count Entry</CardTitle>
-              <CardDescription>Record physical quantities</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Product</TableHead>
-                    <TableHead>Location</TableHead>
-                    <TableHead>System Qty</TableHead>
-                    <TableHead>Physical Qty</TableHead>
-                    <TableHead>Variance</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {countItems.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">{item.product}</div>
-                          <div className="text-sm text-muted-foreground">{item.sku}</div>
-                        </div>
-                      </TableCell>
-                      <TableCell>{item.location}</TableCell>
-                      <TableCell>{item.systemQty}</TableCell>
-                      <TableCell>
-                        <Input type="number" defaultValue={item.physicalQty} className="w-24" />
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={item.variance === 0 ? "outline" : item.variance > 0 ? "default" : "destructive"}>
-                          {item.variance > 0 ? '+' : ''}{item.variance}
-                        </Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              <div className="mt-4 flex gap-2">
-                <Button>Save & Submit for Approval</Button>
-                <Button variant="outline">Save Draft</Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+      {/* Table */}
+      <div className="bg-card rounded-lg border border-border overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow className="border-border hover:bg-transparent">
+              <TableHead className="text-muted-foreground">
+                Count Number
+              </TableHead>
+              <TableHead className="text-muted-foreground">Warehouse</TableHead>
+              <TableHead className="text-muted-foreground">
+                Created By
+              </TableHead>
+              <TableHead className="text-muted-foreground">Date</TableHead>
+              <TableHead className="text-muted-foreground">Products</TableHead>
+              <TableHead className="text-muted-foreground">
+                Differences
+              </TableHead>
+              <TableHead className="text-muted-foreground">Status</TableHead>
+              <TableHead className="text-muted-foreground text-right">
+                Actions
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {counts.map((count) => (
+              <TableRow key={count.id} className="border-border">
+                <TableCell className="font-medium text-foreground">
+                  {count.count_number}
+                </TableCell>
+                <TableCell className="text-foreground">
+                  {count.warehouse}
+                </TableCell>
+                <TableCell className="text-foreground">
+                  {count.created_by}
+                </TableCell>
+                <TableCell className="text-foreground">
+                  {count.created_at}
+                </TableCell>
+                <TableCell className="text-foreground">
+                  {count.products_count}
+                </TableCell>
+                <TableCell>
+                  <span
+                    className={
+                      count.differences > 0
+                        ? "text-destructive font-medium"
+                        : "text-muted-foreground"
+                    }
+                  >
+                    {count.differences}
+                  </span>
+                </TableCell>
+                <TableCell>{getStatusBadge(count.status)}</TableCell>
+                <TableCell className="text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <MoreVertical className="w-4 h-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={() => navigate(`/inventory-count/${count.id}`)}
+                        className="gap-2"
+                      >
+                        <Eye className="w-4 h-4" />
+                        View Details
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };
