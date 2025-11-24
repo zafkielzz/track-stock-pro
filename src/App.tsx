@@ -19,6 +19,7 @@ import { ThemeProvider } from "./providers/ThemeProvider";
 import InventoryCountNew from "./pages/IventoryCountNew";
 import InventoryCountDetail from "./pages/InventoryCountDetail";
 import ProductsNew from "./pages/ProductsNew";
+import WarehousesNew from "./pages/WarehousesNew";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -34,6 +35,8 @@ const App = () => (
               <Route path="/products" element={<Products />} />
               <Route path="/products/new" element={<ProductsNew />} />
               <Route path="/warehouses" element={<Warehouses />} />
+              <Route path="/warehouses/new" element={<WarehousesNew />} />
+
               <Route path="/stock-operations" element={<StockOperations />} />
               <Route path="/reports" element={<Reports />} />
               <Route path="/inventory-count" element={<InventoryCount />} />

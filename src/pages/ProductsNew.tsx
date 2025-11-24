@@ -1,16 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "@/components/Sidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { ArrowLeft, Plus, X } from "lucide-react";
 import { toast } from "sonner";
 
@@ -18,7 +10,6 @@ interface Product {
   product_id: string;
   product_name: string;
   category: string;
-  stock: number;
   min_stock: number;
 }
 
@@ -28,7 +19,6 @@ const ProductsNew = () => {
     product_id: "",
     product_name: "",
     category: "",
-    stock: 0,
     min_stock: 0,
   });
   const fields = [
@@ -50,7 +40,6 @@ const ProductsNew = () => {
       placeholder: "Electricity",
       type: "text",
     },
-    { id: "stock", label: "Stock", placeholder: "100", type: "number" },
     { id: "min_stock", label: "Min Stock", placeholder: "10", type: "number" },
   ];
   const handleAddProduct = () => {
@@ -64,10 +53,6 @@ const ProductsNew = () => {
     }
     if (!product.category) {
       toast.error("Please enter category");
-      return;
-    }
-    if (!product.stock || isNaN(product.stock)) {
-      toast.error("Please enter valid stock");
       return;
     }
 

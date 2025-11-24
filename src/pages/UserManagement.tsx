@@ -142,59 +142,72 @@ const UserManagement = () => {
                 Add a new user and assign their role
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-4 pt-4">
-              <div>
-                <label className="text-sm font-medium mb-2 block">
-                  Full Name
-                </label>
-                <Input
-                  placeholder="Enter full name"
-                  value={newUserName}
-                  onChange={(e) => setNewUserName(e.target.value)}
-                />
+            <form onSubmit={handleCreateUser}>
+              <div className="space-y-4 pt-4">
+                <div>
+                  <label className="text-sm font-medium mb-2 block">
+                    Full Name
+                  </label>
+                  <Input
+                    placeholder="Enter full name"
+                    value={newUserName}
+                    onChange={(e) => setNewUserName(e.target.value)}
+                    minLength={3}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">
+                    Email
+                  </label>
+                  <Input
+                    type="email"
+                    placeholder="user@example.com"
+                    value={newUserEmail}
+                    onChange={(e) => setNewUserEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Role</label>
+                  <Select
+                    value={newUserRole}
+                    onValueChange={setNewUserRole}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="admin">Admin</SelectItem>
+                      <SelectItem value="manager">Manager</SelectItem>
+                      <SelectItem value="staff">Staff</SelectItem>
+                      <SelectItem value="viewer">Viewer</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">
+                    Password
+                  </label>
+                  <Input
+                    type="password"
+                    placeholder="Enter password"
+                    value={newUserPassword}
+                    onChange={(e) => setNewUserPassword(e.target.value)}
+                    minLength={6}
+                    required
+                  />
+                </div>
+                <Button
+                  className="w-full"
+                  type="submit"
+                  disabled={!newUserName || !newUserEmail || !newUserPassword}
+                >
+                  Create User
+                </Button>
               </div>
-              <div>
-                <label className="text-sm font-medium mb-2 block">Email</label>
-                <Input
-                  type="email"
-                  placeholder="user@example.com"
-                  value={newUserEmail}
-                  onChange={(e) => setNewUserEmail(e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium mb-2 block">Role</label>
-                <Select value={newUserRole} onValueChange={setNewUserRole}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="admin">Admin</SelectItem>
-                    <SelectItem value="manager">Manager</SelectItem>
-                    <SelectItem value="staff">Staff</SelectItem>
-                    <SelectItem value="viewer">Viewer</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <label className="text-sm font-medium mb-2 block">
-                  Password
-                </label>
-                <Input
-                  type="password"
-                  placeholder="Enter password"
-                  value={newUserPassword}
-                  onChange={(e) => setNewUserPassword(e.target.value)}
-                />
-              </div>
-              <Button
-                className="w-full"
-                onClick={handleCreateUser}
-                disabled={!newUserEmail || !newUserPassword}
-              >
-                Create User
-              </Button>
-            </div>
+            </form>
           </DialogContent>
         </Dialog>
       </div>

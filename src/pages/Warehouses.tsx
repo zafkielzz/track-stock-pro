@@ -2,7 +2,7 @@ import { Plus, Building2, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-
+import { useNavigate } from "react-router-dom";
 const Warehouses = () => {
   const warehouses = [
     {
@@ -33,15 +33,15 @@ const Warehouses = () => {
       status: "Active",
     },
   ];
-
+  const navigate = useNavigate();
   return (
     <div className="p-8 space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold mb-2">Warehouses</h1>
-          <p className="text-muted-foreground">Manage your warehouse locations</p>
+          <p className="text-muted-foreground">Manage your warehouse </p>
         </div>
-        <Button className="gap-2">
+        <Button className="gap-2" onClick={() => navigate("/warehouses/new")}>
           <Plus className="h-4 w-4" />
           Add Warehouse
         </Button>
@@ -49,7 +49,10 @@ const Warehouses = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {warehouses.map((warehouse) => (
-          <Card key={warehouse.id} className="hover:shadow-lg transition-shadow cursor-pointer">
+          <Card
+            key={warehouse.id}
+            className="hover:shadow-lg transition-shadow cursor-pointer"
+          >
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
@@ -58,7 +61,9 @@ const Warehouses = () => {
                   </div>
                   <div>
                     <CardTitle className="text-lg">{warehouse.name}</CardTitle>
-                    <p className="text-xs text-muted-foreground">{warehouse.id}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {warehouse.id}
+                    </p>
                   </div>
                 </div>
                 <Badge variant="default" className="bg-success">
@@ -69,7 +74,9 @@ const Warehouses = () => {
             <CardContent className="space-y-4">
               <div className="flex items-start gap-2 text-sm">
                 <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
-                <span className="text-muted-foreground">{warehouse.location}</span>
+                <span className="text-muted-foreground">
+                  {warehouse.location}
+                </span>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -85,8 +92,12 @@ const Warehouses = () => {
 
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-muted-foreground">Capacity</span>
-                  <span className="text-sm font-semibold">{warehouse.capacity}</span>
+                  <span className="text-sm text-muted-foreground">
+                    Capacity
+                  </span>
+                  <span className="text-sm font-semibold">
+                    {warehouse.capacity}
+                  </span>
                 </div>
                 <div className="w-full bg-secondary rounded-full h-2">
                   <div
