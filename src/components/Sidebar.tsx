@@ -24,7 +24,7 @@ const Sidebar = () => {
   ];
 
   const adminItems = [
-    { to: "/users", icon: Users, label: "User Management" },
+    { to: "/user-management", icon: Users, label: "User Management" },
     { to: "/settings", icon: Settings, label: "Settings" },
   ];
 
