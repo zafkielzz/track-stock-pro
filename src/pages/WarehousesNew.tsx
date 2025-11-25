@@ -5,7 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Plus, X } from "lucide-react";
 import { toast } from "sonner";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 interface Warehouse {
   warehouse_id: string;
   warehouse_name: string;
@@ -31,22 +37,33 @@ const WarehousesNew = () => {
       toast.error("Please enter Warehouse ID");
       return;
     }
-    // if (!warehouse.address) {
-    //   toast.error("Please enter Product name");
-    //   return;
-    // }
-    // if (!product.category) {
-    //   toast.error("Please enter category");
-    //   return;
-    // }
-
-    // if (!product.min_stock || isNaN(product.min_stock)) {
-    //   toast.error("Please enter valid min stock");
-    //   return;
-    // }
+    if (!warehouse.warehouse_name) {
+      toast.error("Please enter Warehouse name");
+      return;
+    }
+    if (!warehouse.address) {
+      toast.error("Please enter address of warehouse");
+      return;
+    }
+    if (!warehouse.manager) {
+      toast.error("Please choose warehouse manager");
+      return;
+    }
+    if (
+      !warehouse.capacity ||
+      isNaN(warehouse.capacity) ||
+      warehouse.capacity < 100
+    ) {
+      toast.error("Please enter valid capacity");
+      return;
+    }
+    if (!warehouse.type) {
+      toast.error("Please choose warehouse type");
+      return;
+    }
 
     toast.success("Add new product successfully!");
-    navigate("/products");
+    navigate("/warehouses");
   };
   console.log(warehouse);
   return (
@@ -100,7 +117,7 @@ const WarehousesNew = () => {
             />
           </div>
           <div>
-            <Label> Address</Label>
+            <Label> Address (sẽ update dùng API tỉnh huyện xã )</Label>
             <Input
               placeholder="Thanh hoa"
               onChange={(e) => {
@@ -113,7 +130,9 @@ const WarehousesNew = () => {
             />
           </div>
           <div>
-            <Label>Manager</Label>
+            <Label>
+              Manager (sẽ update 1 thanh searchable và tìm tất cả các manager)
+            </Label>
             <Input
               placeholder="Anh do cao bang"
               onChange={(e) => {
@@ -126,17 +145,39 @@ const WarehousesNew = () => {
             />
           </div>
           <div>
-            <Label>Type</Label>
+            <Label>Capacity (Unit)</Label>
             <Input
-              placeholder="36"
+              placeholder="1000"
               onChange={(e) => {
                 const value = e.target.value;
+
                 setWarehouse({
                   ...warehouse,
-                  type: e.target.value,
+                  capacity: Number(value.replace(/\s+/g, "")),
                 });
               }}
             />
+          </div>
+          <div>
+            <Label>Type</Label>
+            <Select
+              value={warehouse.type}
+              onValueChange={(value) =>
+                setWarehouse({ ...warehouse, type: value })
+              }
+            >
+              <SelectTrigger id="type" className="mt-1.5">
+                <SelectValue placeholder="Select warehouse type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="t001">General Warehouse</SelectItem>
+                <SelectItem value="t002">Cold Storage</SelectItem>
+                <SelectItem value="t003">Bonded Warehouse</SelectItem>
+                <SelectItem value="t004">Distribution Center</SelectItem>
+                <SelectItem value="t005">Raw Materials Warehouse</SelectItem>
+                <SelectItem value="t006">Finished Goods Warehouse</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-4"></div>

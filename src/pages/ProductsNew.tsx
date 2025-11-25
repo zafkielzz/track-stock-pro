@@ -10,6 +10,7 @@ interface Product {
   product_id: string;
   product_name: string;
   category: string;
+  storage_unit: number;
   min_stock: number;
 }
 
@@ -19,6 +20,7 @@ const ProductsNew = () => {
     product_id: "",
     product_name: "",
     category: "",
+    storage_unit: 0,
     min_stock: 0,
   });
   const fields = [
@@ -40,6 +42,12 @@ const ProductsNew = () => {
       placeholder: "Electricity",
       type: "text",
     },
+    {
+      id: "storage_unit",
+      label: "Storage Unit",
+      placeholder: "1",
+      type: "number",
+    },
     { id: "min_stock", label: "Min Stock", placeholder: "10", type: "number" },
   ];
   const handleAddProduct = () => {
@@ -58,6 +66,14 @@ const ProductsNew = () => {
 
     if (!product.min_stock || isNaN(product.min_stock)) {
       toast.error("Please enter valid min stock");
+      return;
+    }
+    if (
+      !product.storage_unit ||
+      isNaN(product.storage_unit) ||
+      product.storage_unit >= 1000
+    ) {
+      toast.error("Please enter valid storage unit");
       return;
     }
 
