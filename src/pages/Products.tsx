@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus, Search, Filter, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,70 +19,61 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
+import productService from "../services/productService";
+interface IProduct {
+  id: string;
+  name: string;
+  category: string;
+  stock: number;
+  storage_unit: number;
+  min_stock: number;
+}
 const Products = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const products = [
+  const [products, setProducts] = useState<IProduct[]>([
     {
-      id: "P001",
-      name: "Product Alpha",
-      category: "Electronics",
-      stock: 450,
-      minStock: 100,
-      status: "In Stock",
-    },
-    {
-      id: "P002",
-      name: "Product Beta",
-      category: "Furniture",
-      stock: 23,
-      minStock: 50,
-      status: "Low Stock",
-    },
-    {
-      id: "P003",
-      name: "Product Gamma",
-      category: "Tools",
+      id: "",
+      name: "",
+      category: "",
       stock: 0,
-      minStock: 75,
-      status: "Out of Stock",
+      storage_unit: 1,
+      min_stock: 10,
     },
-    {
-      id: "P004",
-      name: "Product Delta",
-      category: "Electronics",
-      stock: 850,
-      minStock: 200,
-      status: "In Stock",
-    },
-    {
-      id: "P005",
-      name: "Product Epsilon",
-      category: "Supplies",
-      stock: 320,
-      minStock: 150,
-      status: "In Stock",
-    },
-  ];
+  ]);
+  const [searchTerm, setSearchTerm] = useState("");
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await productService.getAll();
+        const productsWithDefaultStock = response.data.map((p: IProduct) => ({
+          ...p,
+          stock: p.stock ?? 0,
+          storage_unit: p.storage_unit ?? 1,
+          min_stock: p.min_stock ?? 10,
+        }));
+        setProducts(productsWithDefaultStock);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchProducts();
+  }, []);
+  console.log(products);
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "In Stock":
-        return (
-          <Badge variant="default" className="bg-success">
-            In Stock
-          </Badge>
-        );
-      case "Low Stock":
-        return (
-          <Badge variant="default" className="bg-warning">
-            Low Stock
-          </Badge>
-        );
-      case "Out of Stock":
-        return <Badge variant="destructive">Out of Stock</Badge>;
-      default:
-        return <Badge>{status}</Badge>;
+  const getStatusBadge = (variance: number) => {
+    if (variance > 10) {
+      return (
+        <Badge variant="default" className="bg-success">
+          In Stock
+        </Badge>
+      );
+    } else if (variance > 0) {
+      return (
+        <Badge variant="default" className="bg-warning">
+          Low Stock
+        </Badge>
+      );
+    } else {
+      return <Badge variant="destructive">Out of Stock</Badge>;
     }
   };
   const navigate = useNavigate();
@@ -125,6 +116,7 @@ const Products = () => {
                 <TableHead>Product ID</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Category</TableHead>
+                <TableHead>Storage Unit</TableHead>
                 <TableHead>Stock</TableHead>
                 <TableHead>Min Stock</TableHead>
                 <TableHead>Status</TableHead>
@@ -137,9 +129,12 @@ const Products = () => {
                   <TableCell className="font-medium">{product.id}</TableCell>
                   <TableCell>{product.name}</TableCell>
                   <TableCell>{product.category}</TableCell>
+                  <TableCell>{product.storage_unit}</TableCell>
                   <TableCell>{product.stock}</TableCell>
-                  <TableCell>{product.minStock}</TableCell>
-                  <TableCell>{getStatusBadge(product.status)}</TableCell>
+                  <TableCell>{product.min_stock}</TableCell>
+                  <TableCell>
+                    {getStatusBadge(product.stock - product.min_stock)}
+                  </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>

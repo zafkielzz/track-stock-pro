@@ -5,7 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Plus, X } from "lucide-react";
 import { toast } from "sonner";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 interface Product {
   product_id: string;
   product_name: string;
@@ -36,12 +42,7 @@ const ProductsNew = () => {
       placeholder: "Product A",
       type: "text",
     },
-    {
-      id: "category",
-      label: "Category",
-      placeholder: "Electricity",
-      type: "text",
-    },
+
     {
       id: "storage_unit",
       label: "Storage Unit",
@@ -60,7 +61,7 @@ const ProductsNew = () => {
       return;
     }
     if (!product.category) {
-      toast.error("Please enter category");
+      toast.error("Please choose category");
       return;
     }
 
@@ -127,6 +128,23 @@ const ProductsNew = () => {
               />
             </div>
           ))}
+          <Label> Category</Label>
+          <Select
+            value={product.category}
+            onValueChange={(value) =>
+              setProduct({ ...product, category: value })
+            }
+          >
+            <SelectTrigger id="type" className="mt-1.5">
+              <SelectValue placeholder="Select product category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="c001">Electronics</SelectItem>
+              <SelectItem value="c002">Furniture</SelectItem>
+              <SelectItem value="c003">Tools</SelectItem>
+              <SelectItem value="c004">Supplies</SelectItem>
+            </SelectContent>
+          </Select>
           <div className="space-y-4"></div>
         </div>
 
