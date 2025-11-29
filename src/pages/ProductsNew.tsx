@@ -12,9 +12,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import productService from "../services/productService";
 interface Product {
-  product_id: string;
-  product_name: string;
+  id: string;
+  name: string;
   category: string;
   storage_unit: number;
   min_stock: number;
@@ -23,21 +24,21 @@ interface Product {
 const ProductsNew = () => {
   const navigate = useNavigate();
   const [product, setProduct] = useState<Product>({
-    product_id: "",
-    product_name: "",
+    id: "",
+    name: "",
     category: "",
     storage_unit: 0,
     min_stock: 0,
   });
   const fields = [
     {
-      id: "product_id",
+      id: "id",
       label: "Product ID",
       placeholder: "A001",
       type: "text",
     },
     {
-      id: "product_name",
+      id: "name",
       label: "Product Name",
       placeholder: "Product A",
       type: "text",
@@ -52,11 +53,11 @@ const ProductsNew = () => {
     { id: "min_stock", label: "Min Stock", placeholder: "10", type: "number" },
   ];
   const handleAddProduct = () => {
-    if (!product.product_id) {
+    if (!product.id) {
       toast.error("Please enter Product ID");
       return;
     }
-    if (!product.product_name) {
+    if (!product.name) {
       toast.error("Please enter Product name");
       return;
     }
@@ -65,19 +66,22 @@ const ProductsNew = () => {
       return;
     }
 
-    if (!product.min_stock || isNaN(product.min_stock)) {
+    if (isNaN(product.min_stock)) {
       toast.error("Please enter valid min stock");
       return;
     }
-    if (
-      !product.storage_unit ||
-      isNaN(product.storage_unit) ||
-      product.storage_unit >= 1000
-    ) {
+    if (isNaN(product.storage_unit) || product.storage_unit >= 1000) {
       toast.error("Please enter valid storage unit");
       return;
     }
-
+    productService.create(product);
+    setProduct({
+      id: "",
+      name: "",
+      category: "",
+      storage_unit: 0,
+      min_stock: 0,
+    });
     toast.success("Add new product successfully!");
     navigate("/products");
   };
@@ -104,7 +108,6 @@ const ProductsNew = () => {
 
       {/* Form */}
       <div className="space-y-6">
-        {/* Warehouse Selection */}
         <div className="bg-card border border-border rounded-lg p-6">
           <h2 className="text-lg font-semibold text-foreground mb-4">
             Product Information
@@ -148,7 +151,6 @@ const ProductsNew = () => {
           <div className="space-y-4"></div>
         </div>
 
-        {/* Actions */}
         <div className="flex gap-3 justify-end">
           <Button variant="outline" onClick={() => navigate("/products")}>
             Cancel
@@ -157,7 +159,6 @@ const ProductsNew = () => {
         </div>
       </div>
     </div>
-    // </div>
   );
 };
 

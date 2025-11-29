@@ -47,8 +47,8 @@ const Products = () => {
         const productsWithDefaultStock = response.data.map((p: IProduct) => ({
           ...p,
           stock: p.stock ?? 0,
-          storage_unit: p.storage_unit ?? 1,
-          min_stock: p.min_stock ?? 10,
+          storage_unit: (p.storage_unit ?? 0) || 1,
+          min_stock: (p.min_stock ?? 0) || 10,
         }));
         setProducts(productsWithDefaultStock);
       } catch (error) {
@@ -57,7 +57,6 @@ const Products = () => {
     };
     fetchProducts();
   }, []);
-  console.log(products);
 
   const getStatusBadge = (variance: number) => {
     if (variance > 10) {
@@ -77,7 +76,14 @@ const Products = () => {
     }
   };
   const navigate = useNavigate();
-
+  const handleDelete = async (id: string) => {
+    try {
+      await productService.delete(id);
+      setProducts((prev) => prev.filter((p) => p.id !== id));
+    } catch (e) {
+      console.error(e);
+    }
+  };
   return (
     <div className="p-8 space-y-6">
       <div className="flex items-center justify-between">
@@ -146,7 +152,10 @@ const Products = () => {
                         <DropdownMenuItem>View Details</DropdownMenuItem>
                         <DropdownMenuItem>Edit</DropdownMenuItem>
                         <DropdownMenuItem>Print Barcode</DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive">
+                        <DropdownMenuItem
+                          className="text-destructive"
+                          onClick={() => handleDelete(product.id)}
+                        >
                           Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>
