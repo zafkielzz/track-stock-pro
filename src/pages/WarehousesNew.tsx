@@ -18,7 +18,7 @@ interface Warehouse {
   address: string;
   manager: string;
   type: string;
-  capacity: number;
+  max_capacity: number;
 }
 
 const WarehousesNew = () => {
@@ -29,7 +29,7 @@ const WarehousesNew = () => {
     address: "",
     manager: "",
     type: "",
-    capacity: 0,
+    max_capacity: 0,
   });
 
   const handleAddWarehouse = () => {
@@ -50,11 +50,11 @@ const WarehousesNew = () => {
       return;
     }
     if (
-      !warehouse.capacity ||
-      isNaN(warehouse.capacity) ||
-      warehouse.capacity < 100
+      !warehouse.max_capacity ||
+      isNaN(warehouse.max_capacity) ||
+      warehouse.max_capacity < 100
     ) {
-      toast.error("Please enter valid capacity");
+      toast.error("Please enter valid max capacity");
       return;
     }
     if (!warehouse.type) {
@@ -80,9 +80,9 @@ const WarehousesNew = () => {
           <h1 className="text-3xl font-bold text-foreground mb-2">
             Add new warehouse
           </h1>
-          {/* <p className="text-muted-foreground">
+          <p className="text-muted-foreground">
             Add new products to the inventory
-          </p> */}
+          </p>
         </div>
       </div>
       <div className="space-y-6">
@@ -145,7 +145,7 @@ const WarehousesNew = () => {
             />
           </div>
           <div>
-            <Label>Capacity (Unit)</Label>
+            <Label>Max Capacity </Label>
             <Input
               placeholder="1000"
               onChange={(e) => {
@@ -153,7 +153,7 @@ const WarehousesNew = () => {
 
                 setWarehouse({
                   ...warehouse,
-                  capacity: Number(value.replace(/\s+/g, "")),
+                  max_capacity: Number(value.replace(/\s+/g, "")),
                 });
               }}
             />

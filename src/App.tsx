@@ -20,6 +20,8 @@ import InventoryCountNew from "./pages/IventoryCountNew";
 import InventoryCountDetail from "./pages/InventoryCountDetail";
 import ProductsNew from "./pages/ProductsNew";
 import WarehousesNew from "./pages/WarehousesNew";
+import WarehousesDetail from "./pages/WarehousesDetail";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -36,6 +38,7 @@ const App = () => (
               <Route path="/products/new" element={<ProductsNew />} />
               <Route path="/warehouses" element={<Warehouses />} />
               <Route path="/warehouses/new" element={<WarehousesNew />} />
+              <Route path="/warehouses/:id" element={<WarehousesDetail />} />
 
               <Route path="/stock-operations" element={<StockOperations />} />
               <Route path="/reports" element={<Reports />} />

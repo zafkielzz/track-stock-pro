@@ -107,7 +107,11 @@ const Warehouses = () => {
                 </div>
               </div>
 
-              <Button variant="outline" className="w-full">
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => navigate(`/warehouses/${warehouse.id}`)}
+              >
                 View Details
               </Button>
             </CardContent>
