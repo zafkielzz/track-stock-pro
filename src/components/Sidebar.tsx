@@ -8,6 +8,8 @@ import {
   Users,
   Settings,
   LogOut,
+  LogIn,
+  LogInIcon,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { Button } from "@/components/ui/button";
@@ -20,6 +22,8 @@ const Sidebar = () => {
     { to: "/warehouses", icon: Warehouse, label: "Warehouses" },
     { to: "/stock-operations", icon: ArrowDownUp, label: "Stock Operations" },
     { to: "/inventory-count", icon: ClipboardCheck, label: "Inventory Count" },
+    { to: "/check-in", icon: LogInIcon, label: "Attendance Check" },
+
     { to: "/reports", icon: BarChart3, label: "Reports" },
   ];
 

@@ -21,7 +21,7 @@ import InventoryCountDetail from "./pages/InventoryCountDetail";
 import ProductsNew from "./pages/ProductsNew";
 import WarehousesNew from "./pages/WarehousesNew";
 import WarehousesDetail from "./pages/WarehousesDetail";
-
+import AttendanceCheck from "./pages/AttendanceCheck";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -39,6 +39,7 @@ const App = () => (
               <Route path="/warehouses" element={<Warehouses />} />
               <Route path="/warehouses/new" element={<WarehousesNew />} />
               <Route path="/warehouses/:id" element={<WarehousesDetail />} />
+              <Route path="/check-in" element={<AttendanceCheck />} />
 
               <Route path="/stock-operations" element={<StockOperations />} />
               <Route path="/reports" element={<Reports />} />
