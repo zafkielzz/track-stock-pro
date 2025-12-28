@@ -33,7 +33,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UserPlus, Search, Edit, Trash2, Shield, Loader2 } from "lucide-react";
-// import { useUserManagement } from "@/hooks/useUserManagement";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,10 +43,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-
+import { toast } from "sonner";
+import userService from "../services/userService";
 const UserManagement = () => {
-  // const { users, loading, createUser, updateUserRole, deleteUser } =
-  //   useUserManagement();
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -59,16 +57,39 @@ const UserManagement = () => {
   } | null>(null);
 
   // Form states
-  const [newUserEmail, setNewUserEmail] = useState("");
-  const [newUserPassword, setNewUserPassword] = useState("");
-  const [newUserRole, setNewUserRole] = useState("staff");
-  const [newUserName, setNewUserName] = useState("");
 
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    role: "Staff",
+    password: "",
+  });
   const roleColors = {
     admin: "destructive",
     manager: "default",
     staff: "secondary",
     viewer: "outline",
+  };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log(name);
+    console.log(value);
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value, // Cập nhật đúng trường đang gõ dựa theo 'name'
+    }));
+  };
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      // Tạo URL tạm để hiển thị preview cho đẹp
+      setPreviewUrl(URL.createObjectURL(file));
+    } else {
+      setPreviewUrl(null);
+    }
   };
 
   // const filteredUsers = useMemo(() => {
@@ -89,17 +110,43 @@ const UserManagement = () => {
   //   const inactive = total - active;
   //   return { total, admins, active, inactive };
   // }, [users]);
-
-  const handleCreateUser = async () => {
+  console.log("formdata", formData);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const payload = new FormData();
+    payload.append("full_name", formData.fullName);
+    payload.append("email", formData.email);
+    payload.append("password", formData.password);
+    payload.append("role", formData.role);
+    if (selectedFile) {
+      payload.append("file", selectedFile);
+    }
     try {
-      // await createUser(newUserEmail, newUserPassword, newUserRole, newUserName);
-      setIsCreateDialogOpen(false);
-      setNewUserEmail("");
-      setNewUserPassword("");
-      setNewUserRole("staff");
-      setNewUserName("");
+      const response = await userService.create(payload);
+      console.log(response);
+      if (response.status === 200 || response.status === 201) {
+        toast.success("Create User successfully");
+
+        setFormData({
+          fullName: "",
+          email: "",
+          role: "staff",
+          password: "",
+        });
+        setSelectedFile(null);
+        setPreviewUrl(null);
+
+        setIsCreateDialogOpen(false);
+      } else {
+        toast.error("Create failed: " + response.statusText);
+      }
     } catch (error) {
-      // Error handled in hook
+      console.error("Lỗi:", error);
+      // Với Axios, lỗi server trả về (4xx, 5xx) sẽ nhảy thẳng vào catch
+      // Bạn có thể lấy message lỗi từ error.response.data.message
+      const errorMessage =
+        error.response?.data?.message || "Server error occurred";
+      toast.error(errorMessage);
     }
   };
 
@@ -142,16 +189,17 @@ const UserManagement = () => {
                 Add a new user and assign their role
               </DialogDescription>
             </DialogHeader>
-            <form onSubmit={handleCreateUser}>
+            <form onSubmit={handleSubmit}>
               <div className="space-y-4 pt-4">
                 <div>
                   <label className="text-sm font-medium mb-2 block">
                     Full Name
                   </label>
                   <Input
+                    name="fullName"
                     placeholder="Enter full name"
-                    value={newUserName}
-                    onChange={(e) => setNewUserName(e.target.value)}
+                    value={formData.fullName}
+                    onChange={handleChange}
                     minLength={3}
                     required
                   />
@@ -161,18 +209,25 @@ const UserManagement = () => {
                     Email
                   </label>
                   <Input
+                    name="email"
                     type="email"
                     placeholder="user@example.com"
-                    value={newUserEmail}
-                    onChange={(e) => setNewUserEmail(e.target.value)}
+                    value={formData.email}
+                    onChange={handleChange}
                     required
                   />
                 </div>
                 <div>
                   <label className="text-sm font-medium mb-2 block">Role</label>
                   <Select
-                    value={newUserRole}
-                    onValueChange={setNewUserRole}
+                    name="role"
+                    value={formData.role}
+                    onValueChange={(value) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        role: value,
+                      }))
+                    }
                     required
                   >
                     <SelectTrigger>
@@ -191,18 +246,52 @@ const UserManagement = () => {
                     Password
                   </label>
                   <Input
+                    name="password"
                     type="password"
                     placeholder="Enter password"
-                    value={newUserPassword}
-                    onChange={(e) => setNewUserPassword(e.target.value)}
+                    value={formData.password}
+                    onChange={handleChange}
                     minLength={6}
                     required
                   />
                 </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">
+                    Ảnh khuôn mặt (để đăng ký)
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    required
+                  />
+                </div>
+                {previewUrl && (
+                  <div style={{ marginTop: 15, textAlign: "center" }}>
+                    <img
+                      src={previewUrl}
+                      alt="Preview"
+                      style={{
+                        width: 120, // Chiều rộng cố định
+                        height: 120, // Chiều cao bằng chiều rộng -> Hình vuông
+                        objectFit: "cover", // QUAN TRỌNG: Cắt ảnh để lấp đầy khung mà không bị méo
+                        borderRadius: "50%", // Biến hình vuông thành hình tròn
+                        border: "3px solid #5e72e4", // Thêm viền màu xanh (theo theme của bạn) cho nổi bật
+                        boxShadow: "0 4px 6px rgba(0,0,0,0.1)", // Thêm bóng nhẹ cho có chiều sâu
+                      }}
+                    />
+                  </div>
+                )}
                 <Button
                   className="w-full"
                   type="submit"
-                  disabled={!newUserName || !newUserEmail || !newUserPassword}
+                  disabled={
+                    !formData.email ||
+                    !formData.fullName ||
+                    !formData.password ||
+                    !formData.role ||
+                    !selectedFile
+                  }
                 >
                   Create User
                 </Button>
