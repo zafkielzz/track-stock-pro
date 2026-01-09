@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/select";
 import productService from "../services/productService";
 interface Product {
-  id: string;
   name: string;
   category: string;
   storage_unit: number;
@@ -24,19 +23,12 @@ interface Product {
 const ProductsNew = () => {
   const navigate = useNavigate();
   const [product, setProduct] = useState<Product>({
-    id: "",
     name: "",
     category: "",
     storage_unit: 0,
     min_stock: 0,
   });
   const fields = [
-    {
-      id: "id",
-      label: "Product ID",
-      placeholder: "A001",
-      type: "text",
-    },
     {
       id: "name",
       label: "Product Name",
@@ -53,10 +45,6 @@ const ProductsNew = () => {
     { id: "min_stock", label: "Min Stock", placeholder: "10", type: "number" },
   ];
   const handleAddProduct = () => {
-    if (!product.id) {
-      toast.error("Please enter Product ID");
-      return;
-    }
     if (!product.name) {
       toast.error("Please enter Product name");
       return;
@@ -76,7 +64,6 @@ const ProductsNew = () => {
     }
     productService.create(product);
     setProduct({
-      id: "",
       name: "",
       category: "",
       storage_unit: 0,
@@ -146,6 +133,7 @@ const ProductsNew = () => {
               <SelectItem value="c002">Furniture</SelectItem>
               <SelectItem value="c003">Tools</SelectItem>
               <SelectItem value="c004">Supplies</SelectItem>
+              <SelectItem value="c005">Others</SelectItem>
             </SelectContent>
           </Select>
           <div className="space-y-4"></div>
